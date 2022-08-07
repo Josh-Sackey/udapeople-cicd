@@ -1,0 +1,22 @@
+- name: Creates directory
+  file:
+    path: ~/web
+    state: directory
+
+- name: Copy files to ec2
+  copy:
+    src: files/artifact.tar.gz
+    dest: ~/web
+
+- name: "Extract files to ec2"
+  ansible.builtin.unarchive:
+    src: "~/web/artifact.tar.gz"
+    dest: "~/web"
+    remote_src: yes
+
+- name: "Start pm2 server"
+  shell: |
+    cd ~/web
+    npm i
+    pm2 stop default
+    pm2 start npm -- start
