@@ -456,25 +456,25 @@ jobs:
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
 
-#  configure-prometheus:
-#    docker:
-#      - image: python:3.10.5-alpine3.16
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: ~/
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            apk add --update tar
-#            apk add --update ansible
-#            pip install awscli
-#      - run:
-#          name: configure prometheus
-#          command: |
-#            cd .circleci/ansible
-#            ansible-playbook -i inventory.txt configure-prometheus-node-exporter.yml
-#      - destroy_environment
+  configure-prometheus:
+    docker:
+      - image: python:3.10.5-alpine3.16
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar
+            apk add --update ansible
+            pip install awscli
+      - run:
+          name: configure prometheus
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-prometheus-node-exporter.yml
+      - destroy_environment
 
 workflows:
   default:
@@ -511,11 +511,11 @@ workflows:
           filters:
             branches:
               only: [main]
-#      - configure-prometheus:
-#          requires: [configure-infrastructure]
-#          filters:
-#            branches:
-#              only: [main]
+      - configure-prometheus:
+          requires: [configure-infrastructure]
+          filters:
+            branches:
+              only: [main]
       - run-migrations:
           requires: [configure-infrastructure]
           filters:
