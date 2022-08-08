@@ -382,7 +382,7 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              return 1
+              return 0
             else
               return 1
             fi
@@ -483,24 +483,12 @@ workflows:
       - build-backend
       - test-frontend:
           requires: [build-frontend]
-          filters:
-            branches:
-              only: [main, test-feature-branch]
       - test-backend:
           requires: [build-backend]
-          filters:
-            branches:
-              only: [main, test-feature-branch]
       - scan-backend:
           requires: [build-backend]
-          filters:
-            branches:
-              only: [main, test-feature-branch]
       - scan-frontend:
           requires: [build-frontend]
-          filters:
-            branches:
-              only: [main, test-feature-branch]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
